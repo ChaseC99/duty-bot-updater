@@ -7,128 +7,55 @@ module.exports = {
                 type: 'modal',
                 title: {
                     type: 'plain_text',
-                    text: 'Save it to ClipIt!'
+                    text: 'Update Duty Member',
+                    emoji: true
                 },
-                callback_id: 'clipit',
+                private_metadata: `{"message": {"attachments": ${JSON.stringify(context.original_attachments)},"ts": "${context.ts}", "channel": "${context.channel}"}}`,
                 submit: {
                     type: 'plain_text',
-                    text: 'ClipIt'
+                    text: 'Update',
+                },
+                close: {
+                    type: 'plain_text',
+                    text: 'Cancel',
                 },
                 blocks: [
                     {
-                        block_id: 'message',
-                        type: 'input',
+                        type: "input",
+                        block_id: "ra_input",
                         element: {
-                            action_id: 'message_id',
-                            type: 'plain_text_input',
-                            multiline: true,
-                            initial_value: context.text
-                        },
-                        label: {
-                            type: 'plain_text',
-                            text: 'Message Text'
-                        }
-                    },
-                    {
-                        block_id: 'user',
-                        type: 'input',
-                        element: {
-                            action_id: 'user_id',
-                            type: 'users_select',
-                            initial_user: context.user_id
-                        },
-                        label: {
-                            type: 'plain_text',
-                            text: 'Posted by'
-                        }
-                    },
-                    {
-                        block_id: 'importance',
-                        type: 'input',
-                        element: {
-                            action_id: 'importance_id',
-                            type: 'static_select',
+                            type: "users_select",
                             placeholder: {
-                                type: 'plain_text',
-                                text: 'Select importance',
+                                type: "plain_text",
+                                text: "Select users",
                                 emoji: true
                             },
-                            options: [
-                                {
-                                    text: {
-                                        type: 'plain_text',
-                                        text: 'High 💎💎✨',
-                                        emoji: true
-                                    },
-                                    value: 'high'
-                                },
-                                {
-                                    text: {
-                                        type: 'plain_text',
-                                        text: 'Medium 💎',
-                                        emoji: true
-                                    },
-                                    value: 'medium'
-                                },
-                                {
-                                    text: {
-                                        type: 'plain_text',
-                                        text: 'Low ⚪️',
-                                        emoji: true
-                                    },
-                                    value: 'low'
-                                }
-                            ]
+                            action_id: "multi_users_select_action"
                         },
                         label: {
-                            type: 'plain_text',
-                            text: 'Importance'
+                            type: "plain_text",
+                            text: "Select an RA",
+                            emoji: true
                         }
                     }
-                ]
+                ],
+                callback_id: 'dutybot_update',
             }
         }
     },
+    editMessage: context => {
+        return {
+            token: process.env.SLACK_ACCESS_TOKEN,
+            channel: context.channel,
+            ts: context.ts,
+            attachments: context.attachments
+        }
+    },
     confirmation: context => {
+        
         return {
             channel: context.channel_id,
-            blocks: [
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: '*Message clipped!*'
-                    }
-                },
-                {
-                    type: 'divider'
-                },
-                {
-                    type: 'section',
-                    text: {
-                        type: 'mrkdwn',
-                        text: `*Message*\n${context.message_id}`
-                    }
-                },
-                {
-                    type: 'context',
-                    elements: [
-                        {
-                            type: 'mrkdwn',
-                            text: `*Posted by* <@${context.selected_user_id}>`
-                        },
-                        {
-                            type: 'mrkdwn',
-                            text: `*Importance:* ${context.importance}`
-                        },
-                        {
-                            type: 'mrkdwn',
-                            // This should be the link in the ClipIt web app
-                            text: `*Link:* http://example.com/${context.user_id}/clip`
-                        }
-                    ]
-                }
-            ]
+            text: `<@${context.user_id}>`
         }
     }
 }
