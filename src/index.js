@@ -51,24 +51,28 @@ app.post('/', async (req, res) => {
       }
       return res.status(200).send({});
     case 'view_submission':
-      // immediately respond with a empty 200 response to let
-      // Slack know the command was received
+      // Immediately send a 200 respond with body to 
+      // tell Slack to close the modal
       res.status(200);
       res.send({response_action: "clear"});
 
+      // Get the embedded metadata from the view
       const metadata = JSON.parse(payload.view.private_metadata)
-      var attachments = metadata.message.attachments
-      const prevs = attachments[0].text.split("\n") 
-      const prev_position = prevs[prevs.length-1].split(':')[0]
       const selected_user = view.state.values.ra_input.multi_users_select_action.selected_user
-      prevs[prevs.length-1] = "~" + prevs[prevs.length-1] + "~"
-      var new_text = ''
-      for (const prev of prevs) {
-        new_text += prev + "\n"
-      }
-      new_text += prev_position + `: <@${selected_user}>*`
-      attachments[0].text = new_text
-      // Edit message
+      
+      // Update the `attachments` payload to
+      //  - cross out the previous line
+      //  - add the new user on a new line
+      var attachments = metadata.message.attachments
+      const prev_lines = attachments[0].text.split("\n")          // Get a list of the previous lines
+      const last_index = prev_lines.length-1                      // Save the index of the last line
+      const prev_position = prev_lines[last_index].split(':')[0]  // Get the position (e.g "DC: Chase" -> "DC")
+      prev_lines[last_index] = "~" + prev_lines[last_index] + "~" // Cross out the last line
+      
+      // Replace the old text with the crossed out previous lines + new line
+      attachments[0].text = prev_lines.join('\n') + '\n' + prev_position + `: <@${selected_user}>*`
+      
+      // Edit message with the new attachment
       const updateData = payloads.editMessage({
         channel: metadata.message.channel,
         ts: metadata.message.ts,
