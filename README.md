@@ -64,5 +64,15 @@ sequenceDiagram
 3. Click Save
 ​
 
-## Deploying to AWS Lambda  
-TODO
+## Deploying to AWS  
+I could have just used `serverless` to create these resources and deploy but I wanted to get the experience of setting up and deploying my code manually.
+
+### Setting up AWS resources
+- Create a new Lambda function with a Node runtime environment
+    - You may need to extend the timeout to 15 seconds
+- Add an API Gateway trigger to the lambda function
+- Update your Slack app's interactive component request url to be the url from the API Gateway.
+
+### Updating the deployment
+- Run `source build_deployment.sh`
+- Upload the new `deployment-package.zip` file to the Lambda function
