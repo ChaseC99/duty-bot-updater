@@ -79,7 +79,8 @@ app.post('/updateDutyMessage', async (req, res) => {
       // Log the updated message to #bot-playground
       const logData = {
         channel: "C0342127Y3F",
-        text: `<@${user.id}> updated a message` 
+        text: `<@${user.id}> updated a message`,
+        attachments: attachments 
       }
       const resp2 = await api.callAPIMethod('chat.postMessage', logData)
 
