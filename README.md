@@ -2,11 +2,30 @@
 Duty Bot Updater is an interactive Slack component that lets any Slack user updat​e the schedule posted by Duty Bot.
 
 ### User Work Flow
-TODO
+1. User clicks "More actions" for a message
+2. User clicks "Update Duty Member"
+3. User selects another Slack user
+4. Orginal message is updated  
+
+![](screenshots/update_duty_message.gif)
 
 ### App Flow 
-TODO: update to remove clipit
-![diagram](https://cdn.glitch.com/802be3e8-445a-4f15-9fb4-966573ebed75%2Factions_and_modals.png?v=1571270384477)
+```mermaid
+sequenceDiagram
+  actor U as User
+  participant S as Slack
+  participant A as App
+  U ->> S: User clicks "Update Duty Member"
+  S ->> A: Slack requests the payload view
+  A ->> S: App calls views.open with the modal instructions 
+  S ->> U: Slack displays modal to user
+  U ->> S: User submits modal with the selected RA
+  S ->>+ A: Slack sends modal submission payload
+  A -->> S: App calls chat.update to update the message
+  A -->> S: App calls chat.postMessage to log the change
+  A ->>- S: App returns 200 ok
+  S ->> U: Slack closes the modal
+```
 
 ## Setup
 
