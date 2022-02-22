@@ -1,9 +1,3 @@
-/* **************************************************************
- * Slack Demo: Message clipping app using an action and a dialog
- *
- * Tomomi Imura (@girlie_mac)
- * **************************************************************/
-
 'use strict';
 
 require('dotenv').config();

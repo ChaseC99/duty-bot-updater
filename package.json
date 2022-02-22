@@ -1,7 +1,7 @@
 {
-  "name": "template-action-and-dialog",
-  "version": "1.5.0",
-  "description": "Sample Slack app that responds to an action with an interactive message",
+  "name": "duty-bot-updater",
+  "version": "1.0",
+  "description": "Interactive Slack App to update the posted Duty schedule",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -14,13 +14,8 @@
     "chatbot",
     "slack API"
   ],
-  "authors": [
-    "Tomomi Imura <opensource@slack.com>",
-    "David Pichsenmeister <opensource@slack.com>"
-  ],
   "license": "MIT",
   "dependencies": {
-    "aws-serverless-express": "^3.4.0",
     "axios": ">=0.18.1",
     "body-parser": "^1.18.2",
     "dotenv": "^8.1.0",
