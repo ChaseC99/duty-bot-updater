@@ -9,6 +9,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const serverless = require('serverless-http')
 const bodyParser = require('body-parser');
 const confirmation = require('./confirmation');
 const signature = require('./verifySignature');
@@ -36,7 +37,7 @@ app.use(bodyParser.json({ verify: rawBodyBuffer }));
 /* To use actions and dialogs, enable the Interactive Components in your dev portal.
 /* Scope: `command` to enable actions
  */
-app.post('/', async (req, res) => {
+app.post('/updateDutyMessage', async (req, res) => {
   if (!signature.isVerified(req)) return res.status(404).send();
 
   const payload = JSON.parse(req.body.payload);
@@ -51,11 +52,6 @@ app.post('/', async (req, res) => {
       }
       return res.status(200).send({});
     case 'view_submission':
-      // Immediately send a 200 respond with body to 
-      // tell Slack to close the modal
-      res.status(200);
-      res.send({response_action: "clear"});
-
       // Get the embedded metadata from the view
       const metadata = JSON.parse(payload.view.private_metadata)
       const selected_user = view.state.values.ra_input.multi_users_select_action.selected_user
@@ -80,9 +76,23 @@ app.post('/', async (req, res) => {
       })
       const resp = await api.callAPIMethod('chat.update', updateData)
 
-      // DM the user a confirmation message
+      // Log the updated message to #bot-playground
+      const logData = {
+        channel: "C0342127Y3F",
+        text: `<@${user.id}> updated a message` 
+      }
+      const resp2 = await api.callAPIMethod('chat.postMessage', logData)
 
-      //confirmation.sendConfirmation(user.id, view);
+      // DM the user a confirmation message
+      // open a DM channel with the user to receive the channel ID
+      // confirmation.sendConfirmation(user.id, view);
+      // TODO
+
+      // Send a 200 respond with body to 
+      // tell Slack to close the modal
+      res.status(200);
+      res.send({response_action: "clear"});
+
       return res;
   }
 });
@@ -103,6 +113,8 @@ const openModal = async (payload) => {
 };
 
 
-const server = app.listen(process.env.PORT || 3000, () => {
-  console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
-});
+// const server = app.listen(process.env.PORT || 3001, () => {
+//   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
+// });
+
+module.exports.handler = serverless(app);
