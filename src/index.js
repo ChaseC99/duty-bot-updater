@@ -67,7 +67,7 @@ app.post('/updateDutyMessage', async (req, res) => {
         ts: metadata.message.ts,
         attachments: attachments,
       })
-      const resp = await api.callAPIMethod('chat.update', updateData)
+      await api.callAPIMethod('chat.update', updateData)
 
       // Log the updated message to #bot-playground
       const logData = {
@@ -75,12 +75,20 @@ app.post('/updateDutyMessage', async (req, res) => {
         text: `<@${user.id}> updated a message`,
         attachments: attachments 
       }
-      const resp2 = await api.callAPIMethod('chat.postMessage', logData)
+      await api.callAPIMethod('chat.postMessage', logData)
 
       // DM the user a confirmation message
       // open a DM channel with the user to receive the channel ID
-      // confirmation.sendConfirmation(user.id, view);
-      // TODO
+      let conversation = await api.callAPIMethod('conversations.open', {
+        users: selected_user
+      });
+    
+      const messageData = {
+        channel: conversation.channel.id,
+        text: `<@${user.id}> updated a message`,
+        attachments: attachments 
+      };
+      await api.callAPIMethod('chat.postMessage', messageData);
 
       // Send a 200 respond with body to 
       // tell Slack to close the modal
