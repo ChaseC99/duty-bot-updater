@@ -5,7 +5,6 @@ require('dotenv').config();
 const express = require('express');
 const serverless = require('serverless-http')
 const bodyParser = require('body-parser');
-const confirmation = require('./confirmation');
 const signature = require('./verifySignature');
 const payloads = require('./payloads');
 const api = require('./api');
