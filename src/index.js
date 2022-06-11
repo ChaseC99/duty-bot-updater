@@ -71,7 +71,7 @@ app.post('/updateDutyMessage', async (req, res) => {
 
       // Log the updated message to #bot-playground
       const logData = {
-        channel: "C0342127Y3F",
+        channel: process.env.LOG_CHANNEL,
         text: `<@${user.id}> updated a message`,
         attachments: attachments 
       }

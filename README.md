@@ -47,6 +47,7 @@ sequenceDiagram
 2. Set the following environment variables to `.env` with your API credentials (see `.env.sample`):
     * `SLACK_ACCESS_TOKEN`: Your app's bot token, `xoxb-` token (available on the Install App page, after you install the app to a workspace once.)
     * `SLACK_SIGNING_SECRET`: Your app's Signing Secret (available on the **Basic Information** page)to a workspace)  
+    * `LOG_CHANNEL`: The channel id for where your log messages will go.
 
 3. If you're running the app locally:
     1. Start the app (`npm start`)
